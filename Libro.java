@@ -50,8 +50,7 @@ public class Libro {
     }
 
     public String toString(){
-        String string "Libro ID(" + this.id + ")("
-        return ;
+        return "Libro ID(" + this.id + ")(";
     }
 
 }

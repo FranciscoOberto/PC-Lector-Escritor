@@ -1,0 +1,63 @@
+import java.util.HashSet;
+
+public class Mode {
+    static HashSet<Libro> libro;
+    static HashSet<Persona> persona;
+    static HashSet<Thread> thread;
+
+    public static void iniciar(){
+        libro = new HashSet<Libro>();
+        persona = new HashSet<Persona>();
+        thread = new HashSet<Thread>();
+
+        for (int i = 0 ; i < 24 ; i++){
+            libro.add(new Libro());
+        }
+
+        for (int i = 0 ; i < 10 ; i++){
+            persona.add( new Escritor((HashSet<Libro>) libro.clone()) );
+        }
+
+        for (int i = 0 ; i < 20 ; i++){
+            persona.add( new Lector((HashSet<Libro>) libro.clone()) );
+        }
+
+        for (Persona p:persona) {
+            Thread t = new Thread(p);
+            thread.add(t);
+            t.start();
+        }
+
+        for(Thread t:thread){
+            try {
+                t.join();
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void iterarSinLock(){
+        while (true){
+            iniciar();
+
+            for(Libro l:libro){
+                System.out.println("El " + l.toString() + " tiene ( " + l.reviews + " ; " + l.reads +  " ; " + l.isFinalVersion + " )");
+                if (l.reviews != 10 || l.isFinalVersion != true){
+                    System.exit(1);
+                }
+            }
+            System.out.println("-----------------------------------------------------------------------------------");
+        }
+    }
+
+    public static void sinLock(){
+        iniciar();
+
+        for(Libro l:libro){
+            System.out.println("El " + l.toString() + " tiene ( " + l.reviews + " ; " + l.reads +  " ; " + l.isFinalVersion + " )");
+        }
+    }
+
+
+}

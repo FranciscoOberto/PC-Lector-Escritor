@@ -1,12 +1,13 @@
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Mode {
-    static HashSet<Libro> libro;
+    static ArrayList<Libro> libro;
     static HashSet<Persona> persona;
     static HashSet<Thread> thread;
 
     public static void iniciar(){
-        libro = new HashSet<Libro>();
+        libro = new ArrayList<Libro>();
         persona = new HashSet<Persona>();
         thread = new HashSet<Thread>();
 
@@ -15,11 +16,11 @@ public class Mode {
         }
 
         for (int i = 0 ; i < 10 ; i++){
-            persona.add( new Escritor((HashSet<Libro>) libro.clone()) );
+            persona.add( new Escritor( (ArrayList<Libro>)  libro.clone()) );
         }
 
         for (int i = 0 ; i < 20 ; i++){
-            persona.add( new Lector((HashSet<Libro>) libro.clone()) );
+            persona.add( new Lector((ArrayList<Libro>) libro.clone()) );
         }
 
         for (Persona p:persona) {
@@ -42,9 +43,9 @@ public class Mode {
             iniciar();
 
             for(Libro l:libro){
-                System.out.println("El " + l.toString() + " tiene ( " + l.reviews + " ; " + l.reads +  " ; " + l.isFinalVersion + " )");
-                if (l.reviews != 10 || l.isFinalVersion != true){
-                    System.exit(1);
+                System.out.println(l.toString());
+                if (!l.isFinal()){
+                    System.exit(13);
                 }
             }
             System.out.println("-----------------------------------------------------------------------------------");
@@ -55,7 +56,7 @@ public class Mode {
         iniciar();
 
         for(Libro l:libro){
-            System.out.println("El " + l.toString() + " tiene ( " + l.reviews + " ; " + l.reads +  " ; " + l.isFinalVersion + " )");
+            System.out.println(l.toString());
         }
     }
 

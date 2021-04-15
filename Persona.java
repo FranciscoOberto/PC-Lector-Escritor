@@ -1,26 +1,25 @@
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 public abstract class Persona implements Runnable {
-    protected HashSet<Libro> book;
+    protected ArrayList<Libro> book;
 
-    public Persona(HashSet<Libro> book){
+    public Persona(ArrayList<Libro> book){
         setBook(book);
     }
 
-    public void setBook(HashSet<Libro> book){
+    public void setBook(ArrayList<Libro> book){
         this.book = book;
     }
 
     public Libro getBook(){
-        Iterator<Libro> iterator = this.book.iterator();
-        if (iterator.hasNext()){
-            Libro libro = iterator.next();
-            //iterator.remove();
+        if (!book.isEmpty()){
+            Libro libro = book.get(new Random().nextInt(book.size()));
             return libro;
-        }else {
-            return null;
         }
+
+        throw new RuntimeException("No quedan libros pendientes para " + this.toString());
 
     }
 

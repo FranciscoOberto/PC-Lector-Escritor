@@ -44,13 +44,16 @@ public class Libro {
             e.printStackTrace();
         }finally {
             lock.readLock().unlock();
-            if (isFinalVersion){return true;}
-            return false;
+            return isFinal();
         }
     }
 
+    public Boolean isFinal(){
+        return isFinalVersion;
+    }
+
     public String toString(){
-        return "Libro ID(" + this.id + ")(";
+        return "Libro ID(" + this.id + ")############( " + + this.reviews + " ; " + this.reads +  " ; " + this.isFinalVersion + " )";
     }
 
 }

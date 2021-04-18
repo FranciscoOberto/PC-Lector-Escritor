@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class Mode {
+public class Biblioteca {
     static ArrayList<Libro> libro;
     static HashSet<Persona> persona;
     static HashSet<Thread> thread;
@@ -38,7 +38,7 @@ public class Mode {
         }
     }
 
-    public static void iterarSinLock(){
+    public static void iterar(){
         while (true){
             iniciar();
 
@@ -47,12 +47,15 @@ public class Mode {
                 if (!l.isFinal()){
                     System.exit(13);
                 }
+                if(l.getReads() != 20){
+                    System.exit(14);
+                }
             }
             System.out.println("-----------------------------------------------------------------------------------");
         }
     }
 
-    public static void sinLock(){
+    public static void ejecutar(){
         iniciar();
 
         for(Libro l:libro){

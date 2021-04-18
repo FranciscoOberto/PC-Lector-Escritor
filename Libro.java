@@ -3,7 +3,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Libro {
-    private ReentrantReadWriteLock lock;
+    private PriorityLock lock;
     private static Integer nBook = 0;
     private Boolean isFinalVersion;
     private Integer reviews;
@@ -11,7 +11,7 @@ public class Libro {
     private Integer id;
 
     public Libro(){
-        this.lock = new ReentrantReadWriteLock();
+        this.lock = new PriorityLock();
         this.isFinalVersion = false;
         this.reviews = 0;
         this.reads = 0;
@@ -23,7 +23,7 @@ public class Libro {
     }
 
     public void write() {
-        lock.writeLock().lock();
+        lock.getWriteLock().lock();
         try{
             TimeUnit.MILLISECONDS.sleep(new Random().nextInt(1));
             this.reviews++;
@@ -31,19 +31,19 @@ public class Libro {
         }catch (InterruptedException e){
             e.printStackTrace();
         }finally {
-            lock.writeLock().unlock();
+            lock.getWriteLock().unlock();
         }
     }
 
     public Boolean read() {
-        lock.readLock().lock();
+        lock.getReadLock().lock();
         try{
             TimeUnit.MILLISECONDS.sleep(new Random().nextInt(1));
-            this.reads++;
+            if(isFinal()){this.reads++;}
         }catch (InterruptedException e){
             e.printStackTrace();
         }finally {
-            lock.readLock().unlock();
+            lock.getReadLock().unlock();
             return isFinal();
         }
     }

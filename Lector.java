@@ -18,6 +18,7 @@ public class Lector extends Persona implements Runnable{
                 if (libro.read()){
                     this.book.remove(libro);
                 }
+                //System.out.printf("El %s leyó el %s\n",this.toString(),libro.toString());
             }catch (RuntimeException e){
                 System.out.println(e.getMessage());
             }

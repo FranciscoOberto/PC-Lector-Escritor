@@ -16,6 +16,7 @@ public class Escritor extends Persona implements Runnable {
                 this.book.remove(libro);
                 //System.out.printf("El %s va a escribir el %s\n",this.toString(),libro.toString());
                 libro.write();
+                //System.out.printf("El %s escribió el %s\n",this.toString(),libro.toString());
             }catch (RuntimeException e){
                 System.out.println(e.getMessage());
             }

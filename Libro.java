@@ -12,6 +12,7 @@ public class Libro {
     private Integer reads;
     private Integer totalReads;
     private Integer id;
+    private final Integer TIME = 200;
 
     public Libro(){
         this.lock = new PriorityLock();
@@ -24,6 +25,10 @@ public class Libro {
 
     public int getId(){
         return this.id;
+    }
+
+    public int getReviews(){
+        return reviews;
     }
 
     public int getReads(){
@@ -51,27 +56,27 @@ public class Libro {
     }
 
     public String toString(){
-        return "Libro ID(" + getId() + ")############( writes: " + this.reviews + " ; reads: " + getReads() + " ; totalReads: " + this.totalReads +  " ; finalVersion: " + this.isFinalVersion + " )";
+        return "Libro ID(" + getId() + ")############( writes: " + getReviews() + " ; reads: " + getReads() + " ; totalReads: " + this.totalReads +  " ; finalVersion: " + this.isFinalVersion + " )";
     }
 
     public void write() {
         lock.getWriteLock().lock();
         try{
-            TimeUnit.MILLISECONDS.sleep(new Random().nextInt(1));
+            TimeUnit.MILLISECONDS.sleep(new Random().nextInt(TIME));
         }catch (InterruptedException e){
             e.printStackTrace();
         }finally {
             this.reviews++;
             if (reviews >= 10){ isFinalVersion = true; }
             lock.getWriteLock().unlock();
-            new Log().addMessage("El " + Thread.currentThread().toString() + " esta ESCRIBIENDO ");
+            Log.addMessage("El " + Thread.currentThread().toString() + " esta ESCRIBIENDO ");
         }
     }
 
     public Boolean read() {
         lock.getReadLock().lock();
         try{
-            TimeUnit.MILLISECONDS.sleep(new Random().nextInt(1));
+            TimeUnit.MILLISECONDS.sleep(new Random().nextInt(TIME));
         }catch (InterruptedException e){
             e.printStackTrace();
         }finally {
@@ -79,7 +84,7 @@ public class Libro {
             if(isFinal){addRead();}
             addTotalRead();
             lock.getReadLock().unlock();
-            new Log().addMessage("El " + Thread.currentThread().toString() + " esta LEYENDO");
+            Log.addMessage("El " + Thread.currentThread().toString() + " esta LEYENDO");
             return isFinal;
         }
     }

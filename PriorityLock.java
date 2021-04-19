@@ -1,4 +1,5 @@
 import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class PriorityLock extends ReentrantReadWriteLock {
@@ -6,67 +7,34 @@ public class PriorityLock extends ReentrantReadWriteLock {
     private final PriorityWriteLock priorityWriteLock = new PriorityWriteLock(this);
     private final PriorityReadLock priorityReadLock = new PriorityReadLock(this);
     private HashSet<Thread> writers = new HashSet<Thread>();
-    private HashSet<Thread> readers = new HashSet<Thread>();
-    private final Object writerControl = new Object();
-    private final Object readerControl = new Object();
-
-
+    private Object controlWriters = new Object();
 
     public synchronized PriorityLock.PriorityWriteLock getWriteLock(){
         return priorityWriteLock;
     }
+
     public synchronized PriorityLock.PriorityReadLock getReadLock(){
         return priorityReadLock;
     }
 
-    public synchronized void addWriter(Thread writer){
-        synchronized (this.writerControl){
-            if (!this.writers.contains(writer)){
-                this.writers.add(writer);
-                System.out.printf("El hilo %s agrega writer a %s y ahora tiene %d \n",Thread.currentThread(), this.toString(),this.writers.size());
-            }
+    public void addWriter(Thread thread){
+        synchronized (controlWriters){
+            this.writers.add(thread);
         }
     }
-    public synchronized void addReader(Thread reader){
-        synchronized (this.readerControl){
-            if (!this.readers.contains(reader)){
-                this.readers.add(reader);
-                System.out.printf("El hilo %s agrega reader a %s y ahora tiene %d \n",Thread.currentThread(), this.toString(),this.readers.size());
+
+    public void removeWriter(Thread thread){
+        synchronized (controlWriters){
+            if (!this.writers.remove(thread)){
+                throw new RuntimeException("No existe el hilo en la lista");
             }
         }
     }
 
-    public synchronized boolean writerIsEmpty(){
-        synchronized (writerControl){
+    public Boolean isEmpty(){
+        synchronized (controlWriters){
             return writers.isEmpty();
         }
-    }
-    public synchronized boolean readerIsEmpty(){
-        synchronized (readerControl){
-            return readers.isEmpty();
-        }
-    }
-
-    public synchronized Thread getWriter(){
-        if (!writerIsEmpty()){
-            synchronized (writerControl){
-                Thread thread = writers.iterator().next();
-                //writers.iterator().remove();
-                return thread;
-            }
-        }
-        throw new RuntimeException("No hay writers esperando");
-    }
-
-    public synchronized Thread getReader(){
-        if (!readerIsEmpty()){
-            synchronized (readerControl){
-                Thread thread = readers.iterator().next();
-                //readers.iterator().remove();
-                return thread;
-            }
-        }
-        throw new RuntimeException("No hay readers esperando");
     }
 
     public static class PriorityWriteLock extends WriteLock{
@@ -78,25 +46,13 @@ public class PriorityLock extends ReentrantReadWriteLock {
         }
 
         public void lock(){
-            if (!super.tryLock()){
-                this.lock.addWriter(Thread.currentThread());
-                try {
-                    Thread.currentThread().wait();
-                }catch (InterruptedException e){
-                    e.printStackTrace();
-                }finally {
-                    this.lock();
-                }
-            }
+            lock.addWriter(Thread.currentThread());
+            super.lock();
         }
 
         public void unlock(){
-            try {
-                this.lock.getWriter().notify();
-            }catch (RuntimeException e){
-                this.lock.getReadLock().unlock();
-                //e.printStackTrace();
-            }
+            super.unlock();
+            lock.removeWriter(Thread.currentThread());
         }
 
     }
@@ -110,32 +66,30 @@ public class PriorityLock extends ReentrantReadWriteLock {
         }
 
         public void lock(){
-            if (this.lock.writerIsEmpty()){
+            if (lock.isEmpty()){
                 if (!super.tryLock()){
-                    this.lock.addReader(Thread.currentThread());
-                    try {
-                        Thread.currentThread().wait();
-                    }catch (InterruptedException e){
-                        e.printStackTrace();
-                    }finally {
-                        this.lock();
-                    }
+                   waitToLock();
                 }
-            }else {
+            }else{
+                waitToLock();
+            }
+        }
+
+        private void waitToLock(){
+            try {
+                /*for (Thread thread: lock.writers){
+                    thread.join();
+                }*/
+                Thread.sleep(1000);
+            }catch (Exception e){
+                e.printStackTrace();
+            }finally {
                 this.lock();
             }
         }
 
         public void unlock(){
-            if(this.lock.writerIsEmpty()){
-                try {
-                    this.lock.getReader().notify();
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }else {
-                this.lock.getWriteLock().unlock();
-            }
+            super.unlock();
         }
 
     }

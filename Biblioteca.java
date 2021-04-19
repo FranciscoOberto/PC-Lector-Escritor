@@ -26,6 +26,7 @@ public class Biblioteca {
         for (Persona p:persona) {
             Thread t = new Thread(p);
             if(p instanceof Escritor){t.setPriority(t.MAX_PRIORITY);}
+            else if(p instanceof Lector){t.setPriority(t.MIN_PRIORITY);}
             thread.add(t);
             t.start();
             try {
@@ -54,6 +55,9 @@ public class Biblioteca {
                 if (!l.isFinal()){
                     System.exit(13);
                 }
+                if (l.getReads()  != 20){
+                    System.exit(14);
+                }
             }
             System.out.println("-----------------------------------------------------------------------------------");
         }
@@ -65,6 +69,8 @@ public class Biblioteca {
         for(Libro l:libro){
             System.out.println(l.toString());
         }
+
+        new Log().write();
     }
 
 

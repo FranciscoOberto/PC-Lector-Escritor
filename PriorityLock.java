@@ -53,6 +53,9 @@ public class PriorityLock extends ReentrantReadWriteLock {
         public void unlock(){
             super.unlock();
             lock.removeWriter(Thread.currentThread());
+            /*if (lock.isEmpty()){
+                notifyAll();
+            }*/
         }
 
     }
@@ -77,7 +80,7 @@ public class PriorityLock extends ReentrantReadWriteLock {
 
         private void waitToLock(){
             try {
-                //lock.wait();
+                //wait();
                 Thread.sleep(1);
             }catch (Exception e){
                 e.printStackTrace();

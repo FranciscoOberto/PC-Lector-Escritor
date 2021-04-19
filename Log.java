@@ -37,6 +37,11 @@ public class Log implements Runnable{
                 e.printStackTrace();
             }
         }
+        try {
+            registro.close();
+        }catch (Exception f){
+            f.printStackTrace();
+        }
     }
 
     public void run(){
@@ -56,6 +61,11 @@ public class Log implements Runnable{
             System.out.println("-------------------------------------------------------------------------------------");
             System.out.println("El hilo de registros fue interrumpido");
             System.out.println("-------------------------------------------------------------------------------------");
+            try {
+                registro.close();
+            }catch (Exception f){
+                f.printStackTrace();
+            }
         }catch (Exception e){
             e.printStackTrace();
             this.run();

@@ -80,13 +80,16 @@ public class Libro {
         }catch (InterruptedException e){
             e.printStackTrace();
         }finally {
-            Boolean isFinal = isFinal();
-            if(isFinal){addRead();}
+            Boolean isFinalAux = isFinal();
+            if(isFinalAux){addRead();}
             addTotalRead();
             lock.getReadLock().unlock();
             Log.addMessage("El " + Thread.currentThread().toString() + " esta LEYENDO");
-            return isFinal;
+            return isFinalAux;
         }
     }
 
 }
+
+
+

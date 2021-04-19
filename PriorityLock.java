@@ -77,10 +77,8 @@ public class PriorityLock extends ReentrantReadWriteLock {
 
         private void waitToLock(){
             try {
-                /*for (Thread thread: lock.writers){
-                    thread.join();
-                }*/
-                Thread.sleep(100);
+                //lock.wait();
+                Thread.sleep(1);
             }catch (Exception e){
                 e.printStackTrace();
             }finally {

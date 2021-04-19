@@ -21,7 +21,7 @@ public class Log{
     }
 
     public void write(){
-        System.out.println(message.size());
+        System.out.println("Total de registros: " + message.size());
         for (String string: message){
             try{
                 fileWriter.write(string + "\n");

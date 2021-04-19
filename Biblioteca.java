@@ -43,6 +43,7 @@ public class Biblioteca {
     public static void iterar(){
         while (true){
             iniciar();
+
             System.out.println("-----------------------------------------------------------------------------------");
             for(Libro l:libro){
                 System.out.println(l.toString());
@@ -59,12 +60,13 @@ public class Biblioteca {
 
     public static void ejecutar(){
         iniciar();
+
         int t = 0;
         for(Libro l:libro){
             System.out.println(l.toString());
             t += l.getTotalReads();
         }
-        System.out.println(t);
+        System.out.println("Total de lecturas: " + t);
         new Log().write();
     }
 

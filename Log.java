@@ -1,16 +1,19 @@
+import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Log{
-    private static HashSet<String> message = new HashSet<String>();
+    private static ArrayList<String> message = new ArrayList<>();
     private FileWriter fileWriter;
 
     public Log(){
         try{
-            fileWriter = new FileWriter("file.txt");
+            fileWriter = new FileWriter(new File("./file.txt"));
         }catch (Exception e){
             e.printStackTrace();
         }
+
     }
 
     public static synchronized void addMessage(String string){
@@ -22,6 +25,7 @@ public class Log{
         for (String string: message){
             try{
                 fileWriter.write(string + "\n");
+                fileWriter.flush();
             }catch (Exception e){
                 e.printStackTrace();
             }

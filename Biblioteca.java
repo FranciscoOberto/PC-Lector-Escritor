@@ -29,12 +29,6 @@ public class Biblioteca {
             else if(p instanceof Lector){t.setPriority(t.MIN_PRIORITY);}
             thread.add(t);
             t.start();
-            try {
-                Thread.sleep(1000);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
         }
 
         for(Thread t:thread){
@@ -65,11 +59,12 @@ public class Biblioteca {
 
     public static void ejecutar(){
         iniciar();
-
+        int t = 0;
         for(Libro l:libro){
             System.out.println(l.toString());
+            t += l.getTotalReads();
         }
-
+        System.out.println(t);
         new Log().write();
     }
 

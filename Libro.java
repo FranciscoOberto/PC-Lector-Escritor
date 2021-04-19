@@ -30,6 +30,8 @@ public class Libro {
         return reads;
     }
 
+    public int getTotalReads(){return totalReads;}
+
     public Boolean isFinal(){
         return isFinalVersion;
     }
@@ -53,8 +55,8 @@ public class Libro {
     public void write() {
         lock.getWriteLock().lock();
         try{
-            new Log().addMessage("El " + Thread.currentThread().toString() + " esta ESCRIBIENDO a las: " + System.currentTimeMillis());
-            TimeUnit.MILLISECONDS.sleep(new Random().nextInt(100));
+            new Log().addMessage("El " + Thread.currentThread().toString() + " esta ESCRIBIENDO el libro: " + toString());
+            TimeUnit.MILLISECONDS.sleep(new Random().nextInt(1));
             this.reviews++;
             if (reviews >= 10){ isFinalVersion = true; }
         }catch (InterruptedException e){
@@ -67,8 +69,8 @@ public class Libro {
     public Boolean read() {
         lock.getReadLock().lock();
         try{
-            new Log().addMessage("El " + Thread.currentThread().toString() + " esta LEYENDO a las: " + System.currentTimeMillis());
-            TimeUnit.MILLISECONDS.sleep(new Random().nextInt(100));
+            new Log().addMessage("El " + Thread.currentThread().toString() + " esta LEYENDO el libro: " + toString());
+            TimeUnit.MILLISECONDS.sleep(new Random().nextInt(1));
             if(isFinal()){addRead();}
             addTotalRead();
         }catch (InterruptedException e){

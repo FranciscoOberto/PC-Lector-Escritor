@@ -1,97 +1,43 @@
-import java.util.HashSet;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class PriorityLock extends ReentrantReadWriteLock {
+public class PriorityLock{
+    private ReentrantReadWriteLock lock;
+    private Semaphore semaphore;
 
-    private final PriorityWriteLock priorityWriteLock = new PriorityWriteLock(this);
-    private final PriorityReadLock priorityReadLock = new PriorityReadLock(this);
-    private HashSet<Thread> writers = new HashSet<Thread>();
-    private Object controlWriters = new Object();
-
-    public synchronized PriorityLock.PriorityWriteLock getWriteLock(){
-        return priorityWriteLock;
+    public PriorityLock(){
+        lock = new ReentrantReadWriteLock();
+        semaphore = new Semaphore(10);
     }
 
-    public synchronized PriorityLock.PriorityReadLock getReadLock(){
-        return priorityReadLock;
-    }
-
-    public void addWriter(Thread thread){
-        synchronized (controlWriters){
-            this.writers.add(thread);
+    public void lockWriter(){
+        try{
+            semaphore.acquire(1);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }finally {
+            lock.writeLock().lock();
         }
     }
 
-    public void removeWriter(Thread thread){
-        synchronized (controlWriters){
-            if (!this.writers.remove(thread)){
-                throw new RuntimeException("No existe el hilo en la lista");
-            }
-        }
-    }
-
-    public Boolean isEmpty(){
-        synchronized (controlWriters){
-            return writers.isEmpty();
-        }
-    }
-
-    public static class PriorityWriteLock extends WriteLock{
-        private PriorityLock lock;
-
-        public PriorityWriteLock(PriorityLock lock){
-            super(lock);
-            this.lock = lock;
-        }
-
-        public void lock(){
-            lock.addWriter(Thread.currentThread());
-            super.lock();
-        }
-
-        public void unlock(){
-            super.unlock();
-            lock.removeWriter(Thread.currentThread());
-            /*if (lock.isEmpty()){
-                notifyAll();
-            }*/
+    public void lockReader(){
+        try{
+            semaphore.acquire(10);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }finally {
+            lock.readLock().lock();
+            semaphore.release(10);
         }
 
     }
 
-    public static class PriorityReadLock extends ReadLock{
-        private PriorityLock lock;
+    public void unlockWriter(){
+        lock.writeLock().unlock();
+        semaphore.release(1);
+    }
 
-        public PriorityReadLock(PriorityLock lock){
-            super(lock);
-            this.lock = lock;
-        }
-
-        public void lock(){
-            if (lock.isEmpty()){
-                if (!super.tryLock()){
-                   waitToLock();
-                }
-            }else{
-                waitToLock();
-            }
-        }
-
-        private void waitToLock(){
-            try {
-                //wait();
-                Thread.sleep(1);
-            }catch (Exception e){
-                e.printStackTrace();
-            }finally {
-                this.lock();
-            }
-        }
-
-        public void unlock(){
-            super.unlock();
-        }
-
+    public void unlockReader(){
+        lock.readLock().unlock();
     }
 }

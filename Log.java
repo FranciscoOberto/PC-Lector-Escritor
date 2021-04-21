@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Log implements Runnable{
-    private static ArrayList<String> message = new ArrayList<>();
+    private static ArrayList<String> message = new ArrayList<String>();
+    private static final Object controlMessage = new Object();
     private FileWriter actividades;
     private FileWriter registro;
     private Integer totalRegistro = 0;
@@ -23,8 +24,10 @@ public class Log implements Runnable{
         return totalRegistro;
     }
 
-    public static synchronized void addMessage(String string){
-        message.add(string);
+    public static void addMessage(String string){
+        synchronized (controlMessage){
+            message.add(string);
+        }
     }
 
     public void write(){

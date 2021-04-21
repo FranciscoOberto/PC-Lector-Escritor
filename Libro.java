@@ -60,7 +60,7 @@ public class Libro {
     }
 
     public void write() {
-        lock.getWriteLock().lock();
+        lock.lockWriter();
         try{
             TimeUnit.MILLISECONDS.sleep(new Random().nextInt(TIME));
         }catch (InterruptedException e){
@@ -68,13 +68,13 @@ public class Libro {
         }finally {
             this.reviews++;
             if (reviews >= 10){ isFinalVersion = true; }
-            lock.getWriteLock().unlock();
+            lock.unlockWriter();
             Log.addMessage("El " + Thread.currentThread().toString() + " esta ESCRIBIENDO ");
         }
     }
 
     public Boolean read() {
-        lock.getReadLock().lock();
+        lock.lockReader();
         try{
             TimeUnit.MILLISECONDS.sleep(new Random().nextInt(TIME));
         }catch (InterruptedException e){
@@ -83,7 +83,7 @@ public class Libro {
             Boolean isFinalAux = isFinal();
             if(isFinalAux){addRead();}
             addTotalRead();
-            lock.getReadLock().unlock();
+            lock.unlockReader();
             Log.addMessage("El " + Thread.currentThread().toString() + " esta LEYENDO");
             return isFinalAux;
         }

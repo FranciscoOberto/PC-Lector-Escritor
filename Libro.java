@@ -69,7 +69,8 @@ public class Libro {
             this.reviews++;
             if (reviews >= 10){ isFinalVersion = true; }
             lock.unlockWriter();
-            Log.addMessage("El " + Thread.currentThread().toString() + " esta ESCRIBIENDO ");
+            Thread thread = Thread.currentThread();
+            Log.addMessage("El " + thread.getName() + "(" + thread.getState() + ") esta ESCRIBIENDO");
         }
     }
 
@@ -84,7 +85,8 @@ public class Libro {
             if(isFinalAux){addRead();}
             addTotalRead();
             lock.unlockReader();
-            Log.addMessage("El " + Thread.currentThread().toString() + " esta LEYENDO");
+            Thread thread = Thread.currentThread();
+            Log.addMessage("El " + thread.getName() + "(" + thread.getState() + ") esta LEYENDO");
             return isFinalAux;
         }
     }

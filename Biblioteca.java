@@ -26,8 +26,9 @@ public class Biblioteca {
             persona.add( new Lector((ArrayList<Libro>) libro.clone()) );
         }
 
+        int i = 0;
         for (Persona p:persona) {
-            Thread t = new Thread(p);
+            Thread t = new Thread(p,"Thread-" + ++i);
             if(p instanceof Escritor){t.setPriority(t.MAX_PRIORITY);}
             else if(p instanceof Lector){t.setPriority(t.MIN_PRIORITY);}
             thread.add(t);

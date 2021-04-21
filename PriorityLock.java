@@ -29,7 +29,6 @@ public class PriorityLock{
             lock.readLock().lock();
             semaphore.release(10);
         }
-
     }
 
     public void unlockWriter(){

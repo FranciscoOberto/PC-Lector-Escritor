@@ -1,0 +1,29 @@
+
+-------------------------------------------------------------------------------------
+Libro ID(1)############( writes: 0 ; reads: 0 ; totalReads: 1 ; finalVersion: false )
+Libro ID(2)############( writes: 10 ; reads: 20 ; totalReads: 22 ; finalVersion: true )
+Libro ID(3)############( writes: 10 ; reads: 20 ; totalReads: 20 ; finalVersion: true )
+Libro ID(4)############( writes: 10 ; reads: 20 ; totalReads: 20 ; finalVersion: true )
+Libro ID(5)############( writes: 10 ; reads: 20 ; totalReads: 21 ; finalVersion: true )
+Libro ID(6)############( writes: 10 ; reads: 20 ; totalReads: 21 ; finalVersion: true )
+Libro ID(7)############( writes: 10 ; reads: 20 ; totalReads: 20 ; finalVersion: true )
+Libro ID(8)############( writes: 10 ; reads: 20 ; totalReads: 23 ; finalVersion: true )
+Libro ID(9)############( writes: 10 ; reads: 20 ; totalReads: 22 ; finalVersion: true )
+Libro ID(10)############( writes: 10 ; reads: 20 ; totalReads: 20 ; finalVersion: true )
+Libro ID(11)############( writes: 10 ; reads: 20 ; totalReads: 20 ; finalVersion: true )
+Libro ID(12)############( writes: 10 ; reads: 20 ; totalReads: 21 ; finalVersion: true )
+Libro ID(13)############( writes: 10 ; reads: 20 ; totalReads: 20 ; finalVersion: true )
+Libro ID(14)############( writes: 10 ; reads: 20 ; totalReads: 21 ; finalVersion: true )
+Libro ID(15)############( writes: 10 ; reads: 20 ; totalReads: 22 ; finalVersion: true )
+Libro ID(16)############( writes: 10 ; reads: 20 ; totalReads: 21 ; finalVersion: true )
+Libro ID(17)############( writes: 10 ; reads: 20 ; totalReads: 22 ; finalVersion: true )
+Libro ID(18)############( writes: 10 ; reads: 20 ; totalReads: 20 ; finalVersion: true )
+Libro ID(19)############( writes: 10 ; reads: 20 ; totalReads: 20 ; finalVersion: true )
+Libro ID(20)############( writes: 10 ; reads: 20 ; totalReads: 21 ; finalVersion: true )
+Libro ID(21)############( writes: 10 ; reads: 20 ; totalReads: 21 ; finalVersion: true )
+Libro ID(22)############( writes: 10 ; reads: 20 ; totalReads: 20 ; finalVersion: true )
+Libro ID(23)############( writes: 10 ; reads: 20 ; totalReads: 20 ; finalVersion: true )
+Libro ID(24)############( writes: 10 ; reads: 20 ; totalReads: 23 ; finalVersion: true )
+-------------------------------------------------------------------------------------
+RESULTADO: [ reviews( 240 ) ; reads( 480 ) ; totalReads( 502 ) ; total( 742 ) ]
+-------------------------------------------------------------------------------------

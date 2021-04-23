@@ -5,6 +5,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class Libro {
     private final Object controlReader = new Object();
     private final Object controlTotalReader = new Object();
+    private final Object controlReviews = new Object();
+    private final Object controlIsFinal = new Object();
     private PriorityLock lock;
     private static Integer nBook = 0;
     private Boolean isFinalVersion;
@@ -23,40 +25,8 @@ public class Libro {
         this.id = ++nBook;
     }
 
-    public int getId(){
-        return this.id;
-    }
-
-    public int getReviews(){
-        return reviews;
-    }
-
-    public int getReads(){
-        synchronized (controlReader){
-            return reads;
-        }
-    }
-
-    public int getTotalReads(){return totalReads;}
-
-    public Boolean isFinal(){
-        return isFinalVersion;
-    }
-
-    public void addRead(){
-        synchronized (controlReader){
-            reads++;
-        }
-    }
-
-    public void addTotalRead(){
-        synchronized (controlTotalReader){
-            totalReads++;
-        }
-    }
-
     public String toString(){
-        return "Libro ID(" + getId() + ")############( writes: " + getReviews() + " ; reads: " + getReads() + " ; totalReads: " + this.totalReads +  " ; finalVersion: " + this.isFinalVersion + " )";
+        return "Libro ID(" + getId() + ")############( writes: " + getReviews() + " ; reads: " + getReads() + " ; totalReads: " + getTotalReads() +  " ; finalVersion: " + isFinal() + " )";
     }
 
     public void write() {
@@ -66,8 +36,8 @@ public class Libro {
         }catch (InterruptedException e){
             e.printStackTrace();
         }finally {
-            this.reviews++;
-            if (reviews >= 10){ isFinalVersion = true; }
+            addReviews();
+            if (getReviews() >= 10){ setIsFinal(); }
             lock.unlockWriter();
             Thread thread = Thread.currentThread();
             Log.addMessage("El " + thread.getName() + "(" + thread.getState() + ") esta ESCRIBIENDO");
@@ -88,6 +58,58 @@ public class Libro {
             Thread thread = Thread.currentThread();
             Log.addMessage("El " + thread.getName() + "(" + thread.getState() + ") esta LEYENDO");
             return isFinalAux;
+        }
+    }
+
+    public int getId(){
+        return this.id;
+    }
+
+    public int getReviews(){
+        synchronized (controlReviews){
+            return reviews;
+        }
+    }
+
+    public int getReads(){
+        synchronized (controlReader){
+            return reads;
+        }
+    }
+
+    public int getTotalReads(){
+        synchronized (controlTotalReader){
+            return totalReads;
+        }
+    }
+
+    public Boolean isFinal(){
+        synchronized (controlIsFinal){
+            return isFinalVersion;
+        }
+    }
+
+    public void addRead(){
+        synchronized (controlReader){
+            reads++;
+        }
+    }
+
+    public void addTotalRead(){
+        synchronized (controlTotalReader){
+            totalReads++;
+        }
+    }
+
+    public void addReviews(){
+        synchronized (controlReviews){
+            reviews++;
+        }
+    }
+
+    public void setIsFinal(){
+        synchronized (controlIsFinal){
+            isFinalVersion = true;
         }
     }
 
